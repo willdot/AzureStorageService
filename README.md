@@ -15,12 +15,14 @@ In your appsettings.json file, add a "ConnectionString" that has a value of your
 Connection string on Azure can be found in the Access Keys section of your storage account overview.
 
 ``` JSON
+// appsettings.json
 {
   "ConnectionString":"",
 }
 ```
 
 ``` C#
+// startup.cs
 public Startup(IConfiguration configuration)
 {
   Configuration = configuration;
