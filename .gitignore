@@ -1,0 +1,10 @@
+/BlobStorageService.Demo/bin/
+/BlobStorageService.Demo/obj/
+
+/BlobStorageService.Service/bin/
+/BlobStorageService.Service/obj/
+
+/BlobStorageService.Demo/appsettings.Development.json
+
+/.vs/
+/.vscode/
