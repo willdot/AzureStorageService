@@ -6,5 +6,8 @@
 
 /BlobStorageService.Demo/appsettings.Development.json
 
+/BlobStorageService.Tests/bin/
+/BlobStorageService.Tests/obj/
+
 /.vs/
 /.vscode/
