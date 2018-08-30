@@ -8,8 +8,8 @@ namespace BlobStorageService.Service
 {
     public class AzureProvider : IAzureProvider
     {
-        public CloudStorageAccount StorageAccount { get; set; }
-        public CloudBlobClient Client { get; set; }
+        public CloudStorageAccount StorageAccount { get; private set; }
+        public CloudBlobClient Client { get; private set; }
 
         private readonly AppSettings settings;
 
@@ -28,7 +28,7 @@ namespace BlobStorageService.Service
 
             if (!CloudStorageAccount.TryParse(settings.ConnectionString, out account))
             {
-                //throw new Exception("Error with account");
+                throw new Exception("Error with account");
             }
 
             this.StorageAccount = account;

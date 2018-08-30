@@ -6,9 +6,9 @@ namespace BlobStorageService.Service
 {
     public interface IAzureProvider
     {
-        CloudStorageAccount StorageAccount {get; set;}
+        CloudStorageAccount StorageAccount {get;}
 
-        CloudBlobClient Client {get; set;}
+        CloudBlobClient Client {get;}
 
 
         void CreateAccount();
