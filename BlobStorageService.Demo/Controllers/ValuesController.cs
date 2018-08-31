@@ -15,6 +15,7 @@ namespace BlobStorageService.Demo.Controllers
         public ValuesController(IAzureProvider _azureProvider)
         {
             azureProvider = _azureProvider;
+            azureProvider.Initialize();
         }
         
         [HttpGet]

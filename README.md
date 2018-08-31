@@ -54,6 +54,7 @@ public class Test
     public Test(IAzureProvider _provider)
     {
         Provider = _provider;
+        Provider.Initialize();
     }
     
     public void DoSomething()

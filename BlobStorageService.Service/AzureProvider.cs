@@ -16,14 +16,22 @@ namespace BlobStorageService.Service
         public AzureProvider(IOptions<AppSettings> options)
         {
             settings = options.Value;
+        }
 
+        public void Initialize()
+        {
             CreateAccount();
 
             CreateClient();
         }
 
-        public void CreateAccount()
+        internal void CreateAccount()
         {
+            if (settings == null)
+            {
+                throw new NullReferenceException("No App settings");
+            }
+
             CloudStorageAccount account;
 
             if (!CloudStorageAccount.TryParse(settings.ConnectionString, out account))
@@ -34,11 +42,9 @@ namespace BlobStorageService.Service
             this.StorageAccount = account;
         }
 
-        public void CreateClient()
+        internal void CreateClient()
         {
             this.Client = this.StorageAccount.CreateCloudBlobClient();
-        }
-
-        
+        } 
     }
 }

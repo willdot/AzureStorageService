@@ -10,9 +10,6 @@ namespace BlobStorageService.Service
 
         CloudBlobClient Client {get;}
 
-
-        void CreateAccount();
-
-        void CreateClient();
+        void Initialize();
     }
 }
