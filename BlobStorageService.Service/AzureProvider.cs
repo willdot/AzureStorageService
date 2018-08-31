@@ -6,6 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace BlobStorageService.Service
 {
+    /// <summary>
+    /// This class deals with the connection and configuration of an Azure Blob storage account
+    /// </summary>
     public class AzureProvider : IAzureProvider
     {
         public CloudStorageAccount StorageAccount { get; private set; }
@@ -18,14 +21,20 @@ namespace BlobStorageService.Service
             settings = options.Value;
         }
 
+        /// <summary>
+        /// Sets up the connection to the Azure blob storage account and creates a client to use.
+        /// </summary>
         public void Initialize()
         {
-            CreateAccount();
+            this.StorageAccount = CreateAccount();
 
-            CreateClient();
+            this.Client = CreateClient();
         }
 
-        internal void CreateAccount()
+        /// <summary>
+        /// Creates a CloudStorageAccount from the connection string provided.
+        /// </summary>
+        protected CloudStorageAccount CreateAccount()
         {
             if (settings == null)
             {
@@ -39,12 +48,15 @@ namespace BlobStorageService.Service
                 throw new Exception("Error with account");
             }
 
-            this.StorageAccount = account;
+            return account;
         }
 
-        internal void CreateClient()
+        /// <summary>
+        /// Creates a client that can be used to connect to the Blob Storage.
+        /// </summary>
+        protected CloudBlobClient CreateClient()
         {
-            this.Client = this.StorageAccount.CreateCloudBlobClient();
-        } 
+            return this.StorageAccount.CreateCloudBlobClient();
+        }
     }
 }

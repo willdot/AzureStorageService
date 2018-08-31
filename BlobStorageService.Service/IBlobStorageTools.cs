@@ -6,7 +6,7 @@ namespace BlobStorageService.Service
     {
         void Upload(string containerReference, string filename);
 
-        void Download(string containerReference, string fileLocation, string filename);
+        void Download(string containerReference, string remoteFilename, string localFileLocation);
 
         void Delete(string containerReference, string filename);
 

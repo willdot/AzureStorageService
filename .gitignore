@@ -1,5 +1,7 @@
 /BlobStorageService.Demo/bin/
 /BlobStorageService.Demo/obj/
+/BlobStorageService.Demo/.DS_Store
+/BlobStorageService.Demo/test1.txt
 
 /BlobStorageService.Service/bin/
 /BlobStorageService.Service/obj/
@@ -11,3 +13,4 @@
 
 /.vs/
 /.vscode/
+/.DS_Store

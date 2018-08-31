@@ -5,6 +5,10 @@ using Moq;
 
 using BlobStorageService.Service;
 using Microsoft.Extensions.Options;
+using Microsoft.WindowsAzure.Storage.Auth;
+using System.Text;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace BlobStorageService.Tests
 {
@@ -16,6 +20,9 @@ namespace BlobStorageService.Tests
 
         Mock<IAzureProvider> azureProviderMoq;
 
+        Mock<CloudStorageAccount> storageMoq;
+        Mock<CloudBlobClient> clientMoq;
+
         private void SetupAppSettings(AppSettings appSettings)
         {
             appSettingsMoq = new Mock<IOptions<AppSettings>>();
@@ -23,18 +30,40 @@ namespace BlobStorageService.Tests
             settings = appSettingsMoq.Object;
         }
 
-        [Test]
-        public void TestMethod1()
+        private StorageCredentials GetFakeCreds()
         {
-            AppSettings appSettings = new AppSettings()
-            {
-                ConnectionString = ""
-            };
+            return new StorageCredentials("Fake",
+             Convert.ToBase64String(Encoding.Unicode.GetBytes("fake")),
+              "fakekey");
+        }
 
-            SetupAppSettings(appSettings);
+        [Test]
+        public void MoqAzureProvider_GetStorageAccount()
+        {
+            StorageCredentials fakeCreds = GetFakeCreds();
 
+            storageMoq = new Mock<CloudStorageAccount>(MockBehavior.Strict, fakeCreds, false);
 
+            azureProviderMoq = new Mock<IAzureProvider>();                             
 
+            azureProviderMoq.SetupGet(p => p.StorageAccount).Returns(storageMoq.Object);
+            
+            Assert.AreEqual(azureProviderMoq.Object.StorageAccount, storageMoq.Object);
+        }
+
+        [Test]
+        public void MoqAzureProvider_GetClient()
+        {
+            StorageCredentials fakeCreds = GetFakeCreds();
+
+            clientMoq = new Mock<CloudBlobClient>(MockBehavior.Strict, new Uri("http://fake.com"), fakeCreds);
+
+            azureProviderMoq = new Mock<IAzureProvider>();       
+                     
+
+            azureProviderMoq.SetupGet(p => p.Client).Returns(clientMoq.Object);
+            
+            Assert.AreEqual(azureProviderMoq.Object.Client, clientMoq.Object);
         }
 
         [Test]

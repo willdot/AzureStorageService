@@ -24,10 +24,9 @@ namespace BlobStorageService.Demo.Controllers
 
             BlobStorageTools tools = new BlobStorageTools(azureProvider);
 
-            tools.Upload("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"c:\temp\Upload.txt");
+            tools.Upload("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"./test1.txt");
 
-            tools.Download("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"c:\temp\", "Test.txt");
-
+            tools.Download("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", "test1.txt", "./copy-test1.txt");
 
             return Ok();
         }
