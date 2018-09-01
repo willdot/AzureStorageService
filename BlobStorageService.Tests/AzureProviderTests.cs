@@ -15,7 +15,6 @@ namespace BlobStorageService.Tests
     [TestFixture]
     public class AzureProviderTests
     {
-        IOptions<AppSettings> settings;
         Mock<IOptions<AppSettings>> appSettingsMoq;
 
         Mock<IAzureProvider> azureProviderMoq;
@@ -27,7 +26,6 @@ namespace BlobStorageService.Tests
         {
             appSettingsMoq = new Mock<IOptions<AppSettings>>();
             appSettingsMoq.Setup(p => p.Value).Returns(appSettings);
-            settings = appSettingsMoq.Object;
         }
 
         private StorageCredentials GetFakeCreds()
@@ -35,6 +33,16 @@ namespace BlobStorageService.Tests
             return new StorageCredentials("Fake",
              Convert.ToBase64String(Encoding.Unicode.GetBytes("fake")),
               "fakekey");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            storageMoq = null;
+            clientMoq = null;
+            azureProviderMoq = null;
+            appSettingsMoq = null;
+
         }
 
         [Test]

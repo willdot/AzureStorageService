@@ -29,8 +29,6 @@ namespace BlobStorageService.Service
 
             CloudBlockBlob blockBlob = GetBlockBlob(container, remoteFilename);
 
-            //string fullPath = Path.Combine(fileLocation, localFileName);
-
             blockBlob.DownloadToFileAsync(localFileLocation, FileMode.Create).Wait();
 
             using (var fileStream = File.OpenWrite(localFileLocation))
