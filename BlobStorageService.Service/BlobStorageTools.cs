@@ -55,17 +55,45 @@ namespace BlobStorageService.Service
 
         public void Delete(string containerReference, string filename)
         {
-            throw new NotImplementedException();
+            try
+            {
+                GetContainer(containerReference).DeleteIfExistsAsync().Wait();
+            }
+            catch (Exception e)
+            {
+                // Try and see if the exception is an Azure Storage Exception and try to convert it if it is
+                if (e.IsAzureStorageException())
+                {
+                    throw e.Convert();
+                }
+                // Not an Azure Storage Exception, so throw the exception
+                throw e;
+            }
         }
 
         public void Move(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
-            throw new NotImplementedException();
+            Copy(sourceContainerReference, sourceFilename, destinationContainerReference, destinationFilename);
+            Delete(sourceContainerReference, sourceFilename);
         }
 
         public void Copy(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
-            throw new NotImplementedException();
+            var sourceContainer = GetContainer(sourceContainerReference);
+            var sourceBlob = GetBlockBlob(sourceContainer, sourceFilename);
+
+            var destinationContainer = GetContainer(destinationContainerReference);
+
+            destinationContainer.CreateIfNotExistsAsync().Wait();
+
+            var destinationBlob = destinationContainer.GetBlockBlobReference(destinationFilename);
+
+            destinationBlob.StartCopyAsync(sourceBlob).Wait();
+
+            if (destinationBlob.CopyState.Status != CopyStatus.Success)
+            {
+                throw new Exception($"There was a problem copying the file: {destinationBlob.CopyState.Status}");
+            }
         }
 
         
