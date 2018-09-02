@@ -34,7 +34,7 @@ namespace BlobStorageService.Service
             using (var fileStream = File.OpenWrite(localFileLocation))
             {
                 fileStream.Position = 0;
-                blockBlob.DownloadToStreamAsync(fileStream);    
+                blockBlob.DownloadToStreamAsync(fileStream);
             }
         }
 
@@ -53,30 +53,36 @@ namespace BlobStorageService.Service
         }
 
 
+        /// <summary>
+        /// Delete a file
+        /// </summary>
+        /// <param name="containerReference">Reference of the container that the file is located in</param>
+        /// <param name="filename">Filename of file to delete</param>
         public void Delete(string containerReference, string filename)
         {
-            try
-            {
-                GetContainer(containerReference).DeleteIfExistsAsync().Wait();
-            }
-            catch (Exception e)
-            {
-                // Try and see if the exception is an Azure Storage Exception and try to convert it if it is
-                if (e.IsAzureStorageException())
-                {
-                    throw e.Convert();
-                }
-                // Not an Azure Storage Exception, so throw the exception
-                throw e;
-            }
+            GetContainer(containerReference).DeleteIfExistsAsync().Wait();
         }
 
+        /// <summary>
+        /// Move a file from one container to another
+        /// </summary>
+        /// <param name="sourceContainerReference">Container reference of the source file</param>
+        /// <param name="sourceFilename">Filename of the source file</param>
+        /// <param name="destinationContainerReference">Container reference of the destination</param>
+        /// <param name="destinationFilename">Filename of the destination file</param>
         public void Move(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
             Copy(sourceContainerReference, sourceFilename, destinationContainerReference, destinationFilename);
             Delete(sourceContainerReference, sourceFilename);
         }
 
+        /// <summary>
+        /// Copy a fle from one container to another
+        /// </summary>
+        /// <param name="sourceContainerReference">Container reference of the source file</param>
+        /// <param name="sourceFilename">Filename of the source file</param>
+        /// <param name="destinationContainerReference">Container reference of the destination</param>
+        /// <param name="destinationFilename">Filename of the destination file</param>
         public void Copy(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
             var sourceContainer = GetContainer(sourceContainerReference);
@@ -96,10 +102,10 @@ namespace BlobStorageService.Service
             }
         }
 
-        
+
         private CloudBlobContainer GetContainer(string containerReference)
         {
-            return Provider.Client.GetContainerReference(containerReference); 
+            return Provider.Client.GetContainerReference(containerReference);
         }
 
         private CloudBlockBlob GetBlockBlob(CloudBlobContainer container, string blobName)
@@ -107,6 +113,6 @@ namespace BlobStorageService.Service
             return container.GetBlockBlobReference(blobName);
         }
 
-        
+
     }
 }
