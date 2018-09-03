@@ -17,18 +17,50 @@ namespace BlobStorageService.Demo.Controllers
             azureProvider = _azureProvider;
             azureProvider.Initialize();
         }
-        
+
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
 
             BlobStorageTools tools = new BlobStorageTools(azureProvider);
 
-            tools.Upload("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"./test1.txt");
+            string err = "";
+            try
+            {
+                tools.Move("blah", "blah",  "blah", "blah");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                err += ex.Message;
+            }
 
-            tools.Download("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", "test1.txt", "./copy-test1.txt");
+            try
+            {
+                tools.Upload("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"./test1.txt");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                err += ex.Message;
+            }
+            
+            try
+            {
+                tools.Download("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", "test1.txt", "./copy-test1.txt");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                err += ex.Message;
+            }
+            
+            if (err == "")
+            {
+                return Ok();
+            }
 
-            return Ok();
+            return BadRequest(err);
         }
 
     }

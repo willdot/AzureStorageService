@@ -42,7 +42,7 @@ namespace BlobStorageService.Service
             }
 
             CloudStorageAccount account;
-
+            
             if (!CloudStorageAccount.TryParse(settings.ConnectionString, out account))
             {
                 throw new Exception("Error with account");

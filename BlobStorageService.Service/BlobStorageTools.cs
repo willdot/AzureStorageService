@@ -49,7 +49,14 @@ namespace BlobStorageService.Service
 
             CloudBlockBlob blockBlob = GetBlockBlob(container, filename);
 
-            blockBlob.UploadFromFileAsync(filename).Wait();
+            try
+            {
+                blockBlob.UploadFromFileAsync(filename).Wait();
+            }
+            catch (Exception ex)
+            {
+                throw ex.ParseToStorageException();
+            }
         }
 
 
@@ -60,7 +67,14 @@ namespace BlobStorageService.Service
         /// <param name="filename">Filename of file to delete</param>
         public void Delete(string containerReference, string filename)
         {
-            GetContainer(containerReference).DeleteIfExistsAsync().Wait();
+            try
+            {
+                GetContainer(containerReference).DeleteIfExistsAsync().Wait();
+            }
+            catch (Exception ex)
+            {
+                throw ex.ParseToStorageException();
+            }
         }
 
         /// <summary>
@@ -72,8 +86,15 @@ namespace BlobStorageService.Service
         /// <param name="destinationFilename">Filename of the destination file</param>
         public void Move(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
-            Copy(sourceContainerReference, sourceFilename, destinationContainerReference, destinationFilename);
-            Delete(sourceContainerReference, sourceFilename);
+            try
+            {
+                Copy(sourceContainerReference, sourceFilename, destinationContainerReference, destinationFilename);
+                Delete(sourceContainerReference, sourceFilename);
+            }
+            catch (Exception ex)
+            {
+                throw ex.ParseToStorageException();
+            }
         }
 
         /// <summary>
