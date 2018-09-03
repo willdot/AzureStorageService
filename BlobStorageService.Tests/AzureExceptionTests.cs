@@ -21,14 +21,14 @@ namespace BlobStorageService.Tests
 
         BlobStorageTools blobStorageTools;
 
-        string sourceContainerReference = "fakesource";
-        string destinationContainerReference = "fakedestination";
+        string sourceContainerReference;
+        string destinationContainerReference;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             config = new ConfigurationBuilder()
-            .AddJsonFile(Environment.CurrentDirectory + "..\\..\\..\\..\\appsettings.test.json")
+            .AddJsonFile(Environment.CurrentDirectory + "../../../../appsettings.test.json")
             .Build();
 
             AppSettings appSettings = new AppSettings()
@@ -47,6 +47,9 @@ namespace BlobStorageService.Tests
         public void Setup()
         {
             blobStorageTools = new BlobStorageTools(provider);
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+            destinationContainerReference = Guid.NewGuid().ToString();
         }
 
         [TearDown]
@@ -91,6 +94,8 @@ namespace BlobStorageService.Tests
         {
             string exceptionMessage = "";
 
+            blobStorageTools.CreateContainer(destinationContainerReference);
+
             try
             {
                 blobStorageTools.Move(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
@@ -108,6 +113,9 @@ namespace BlobStorageService.Tests
         {
             string exceptionMessage = "";
 
+            blobStorageTools.CreateContainer(sourceContainerReference);
+            blobStorageTools.CreateContainer(destinationContainerReference);
+
             try
             {
                 blobStorageTools.Copy(sourceContainerReference, "fake2", sourceContainerReference, "fake2");
@@ -124,6 +132,8 @@ namespace BlobStorageService.Tests
         public void Copy_ContainerNotFoundException()
         {
             string exceptionMessage = "";
+
+            blobStorageTools.CreateContainer(destinationContainerReference);
 
             try
             {
