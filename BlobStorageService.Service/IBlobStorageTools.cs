@@ -14,5 +14,9 @@ namespace BlobStorageService.Service
 
         void Copy (string sourceContainerReference, string sourceFilename,  string destinationContainerReference, string destinationFilename);
 
+        void DeleteContainer(string containerReference);
+
+        void CreateContainer(string containerReference);
+
     }
 }

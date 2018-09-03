@@ -69,7 +69,7 @@ namespace BlobStorageService.Service
         {
             try
             {
-                GetContainer(containerReference).DeleteIfExistsAsync().Wait();
+                GetContainer(containerReference).DeleteAsync().Wait();
             }
             catch (Exception ex)
             {
@@ -115,12 +115,32 @@ namespace BlobStorageService.Service
 
             var destinationBlob = destinationContainer.GetBlockBlobReference(destinationFilename);
 
-            destinationBlob.StartCopyAsync(sourceBlob).Wait();
-
-            if (destinationBlob.CopyState.Status != CopyStatus.Success)
+            try
             {
-                throw new Exception($"There was a problem copying the file: {destinationBlob.CopyState.Status}");
+                destinationBlob.StartCopyAsync(sourceBlob).Wait();
+
+                if (destinationBlob.CopyState.Status != CopyStatus.Success)
+                {
+                    throw new Exception($"There was a problem copying the file: {destinationBlob.CopyState.Status}");
+                }
             }
+            catch (Exception ex)
+            {
+                throw ex.ParseToStorageException();
+            }
+        }
+
+        public void CreateContainer(string containerReference)
+        {
+            var destinationContainer = GetContainer(containerReference);
+
+            destinationContainer.CreateIfNotExistsAsync().Wait();
+        }
+
+        public void DeleteContainer(string containerReference)
+        {
+            var sourceContainer = GetContainer(containerReference);
+            sourceContainer.DeleteAsync().Wait();
         }
 
 

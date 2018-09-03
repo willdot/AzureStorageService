@@ -7,6 +7,7 @@
 /BlobStorageService.Service/obj/
 
 /BlobStorageService.Demo/appsettings.Development.json
+/BlobStorageService.Tests/appsettings.test.json
 
 /BlobStorageService.Tests/bin/
 /BlobStorageService.Tests/obj/
