@@ -47,9 +47,6 @@ namespace BlobStorageService.Tests
         public void Setup()
         {
             blobStorageTools = new BlobStorageTools(provider);
-
-            sourceContainerReference = Guid.NewGuid().ToString();
-            destinationContainerReference = Guid.NewGuid().ToString();
         }
 
         [TearDown]
@@ -58,6 +55,14 @@ namespace BlobStorageService.Tests
             try
             {
                 blobStorageTools.DeleteContainer(sourceContainerReference);
+            }
+            catch (Exception)
+            {
+                //
+            }
+
+            try
+            {
                 blobStorageTools.DeleteContainer(destinationContainerReference);
             }
             catch (Exception)
@@ -66,6 +71,8 @@ namespace BlobStorageService.Tests
             }
 
             blobStorageTools = null;
+            sourceContainerReference = null;
+            destinationContainerReference = null;
         }
 
 
@@ -74,6 +81,8 @@ namespace BlobStorageService.Tests
         {
             string exceptionMessage = "";
 
+            sourceContainerReference = Guid.NewGuid().ToString();
+            destinationContainerReference = Guid.NewGuid().ToString();
             blobStorageTools.CreateContainer(sourceContainerReference);
             blobStorageTools.CreateContainer(destinationContainerReference);
 
@@ -94,7 +103,8 @@ namespace BlobStorageService.Tests
         {
             string exceptionMessage = "";
 
-            blobStorageTools.CreateContainer(destinationContainerReference);
+            sourceContainerReference = Guid.NewGuid().ToString();
+            destinationContainerReference = Guid.NewGuid().ToString();
 
             try
             {
@@ -113,6 +123,8 @@ namespace BlobStorageService.Tests
         {
             string exceptionMessage = "";
 
+            sourceContainerReference = Guid.NewGuid().ToString();
+            destinationContainerReference = Guid.NewGuid().ToString();
             blobStorageTools.CreateContainer(sourceContainerReference);
             blobStorageTools.CreateContainer(destinationContainerReference);
 
@@ -133,7 +145,8 @@ namespace BlobStorageService.Tests
         {
             string exceptionMessage = "";
 
-            blobStorageTools.CreateContainer(destinationContainerReference);
+            sourceContainerReference = Guid.NewGuid().ToString();
+            destinationContainerReference = Guid.NewGuid().ToString();
 
             try
             {
@@ -151,6 +164,7 @@ namespace BlobStorageService.Tests
         public void Delete_ContainerNotFoundException()
         {
             string exceptionMessage = "";
+            sourceContainerReference = Guid.NewGuid().ToString();
 
             try
             {

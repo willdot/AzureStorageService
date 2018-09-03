@@ -3,8 +3,8 @@
 /BlobStorageService.Demo/.DS_Store
 /BlobStorageService.Demo/test1.txt
 
-/BlobStorageService.Service/bin/
-/BlobStorageService.Service/obj/
+/BlobStorageService.Services/bin/
+/BlobStorageService.Services/obj/
 
 /BlobStorageService.Demo/appsettings.Development.json
 /BlobStorageService.Tests/appsettings.test.json
@@ -14,4 +14,4 @@
 
 /.vs/
 /.vscode/
-/.DS_Store
+**/.DS_Store
