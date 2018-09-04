@@ -57,13 +57,23 @@ public class Test
         Provider.Initialize();
     }
     
-    public void DoSomething()
+    public async Task DoSomething()
     {
         BlobStorageTools tools = new BlobStorageTools(Provider);
         
-        tools.Upload("container reference", "File path to upload");
+        await tools.UploadAsync("container reference", "File path to upload");
         
-        tools.Download("container reference", "folder path to save to", "filename to download");
+        await tools.DownloadAsync("container reference", "folder path to save to", "filename to download");
+
+        await tools.MoveAsync("source container reference", "source file name",  "destination container reference", "destination file name");
+
+        await tools.CopyAsync("source container reference", "source file name",  "destination container reference", "destination file name");
+
+        await tools.DeleteAsync("container reference", "file name");
+
+        await tools.CreateContainerAsync("container reference");
+
+        await tools.DeleteContainterAsync("container reference");
     }
 }
 ```
