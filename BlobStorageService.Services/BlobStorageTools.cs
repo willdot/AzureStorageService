@@ -60,6 +60,11 @@ namespace BlobStorageService.Service
             }
         }
 
+        /// <summary>
+        /// Delete a file
+        /// </summary>
+        /// <param name="containerReference">Container reference that contains the file to delete</param>
+        /// <param name="filename">Filename of the file to delete</param>
         public async Task DeleteAsync(string containerReference, string filename)
         {
             try
@@ -125,6 +130,10 @@ namespace BlobStorageService.Service
             }
         }
 
+        /// <summary>
+        /// Create a new container
+        /// </summary>
+        /// <param name="containerReference">Container reference of container to create</param>
         public async Task CreateContainerAsync(string containerReference)
         {
             var destinationContainer = GetContainer(containerReference);
@@ -132,6 +141,10 @@ namespace BlobStorageService.Service
             await destinationContainer.CreateIfNotExistsAsync();
         }
 
+        /// <summary>
+        /// Delete a container
+        /// </summary>
+        /// <param name="containerReference">Container reference of container to delete</param>
         public async Task DeleteContainerAsync(string containerReference)
         {
             var sourceContainer = GetContainer(containerReference);
