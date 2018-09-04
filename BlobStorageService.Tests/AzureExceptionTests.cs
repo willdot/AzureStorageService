@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using BlobStorageService.Service;
 using Microsoft.Extensions.Configuration;
@@ -25,12 +26,16 @@ namespace BlobStorageService.Tests
         string sourceContainerReference;
         string destinationContainerReference;
 
+        string testFile;
+
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             config = new ConfigurationBuilder()
-            .AddJsonFile(Environment.CurrentDirectory + "../../../../appsettings.test.json")
+            .AddJsonFile(Path.Combine(Environment.CurrentDirectory,  "appsettings.test.json"))
             .Build();
+
+            testFile = Path.Combine(Environment.CurrentDirectory, "test.txt");
 
             AppSettings appSettings = new AppSettings()
             {
@@ -259,7 +264,7 @@ namespace BlobStorageService.Tests
             sourceContainerReference = Guid.NewGuid().ToString();
 
             await blobStorageTools.CreateContainerAsync(sourceContainerReference);
-            await blobStorageTools.UploadAsync(sourceContainerReference, "../../../test.txt");
+            await blobStorageTools.UploadAsync(sourceContainerReference, testFile);
             
             try
             {
@@ -283,7 +288,7 @@ namespace BlobStorageService.Tests
 
             try
             {
-                await blobStorageTools.UploadAsync(sourceContainerReference, "../../../test.txt");
+                await blobStorageTools.UploadAsync(sourceContainerReference, testFile);
             }
             catch (Exception ex)
             {

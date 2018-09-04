@@ -21,6 +21,15 @@
     <PackageReference Include="Moq" Version="4.9.0"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
    <ItemGroup>
     <ProjectReference Include="..\BlobStorageService.Services\BlobStorageService.Service.csproj" />
   </ItemGroup>
