@@ -30,12 +30,19 @@ namespace BlobStorageService.Service
 
             CloudBlockBlob blockBlob = GetBlockBlob(container, remoteFilename);
 
-            await blockBlob.DownloadToFileAsync(localFileLocation, FileMode.Create);
-
-            using (var fileStream = File.OpenWrite(localFileLocation))
+            try
             {
-                fileStream.Position = 0;
-                await blockBlob.DownloadToStreamAsync(fileStream);
+                await blockBlob.DownloadToFileAsync(localFileLocation, FileMode.Create);
+
+                using (var fileStream = File.OpenWrite(localFileLocation))
+                {
+                    fileStream.Position = 0;
+                    await blockBlob.DownloadToStreamAsync(fileStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex.ParseToStorageException();
             }
         }
 
@@ -69,7 +76,7 @@ namespace BlobStorageService.Service
         {
             try
             {
-                await GetContainer(containerReference).DeleteAsync();
+                await GetContainer(containerReference).GetBlockBlobReference(filename).DeleteAsync();
             }
             catch (Exception ex)
             {
@@ -161,7 +168,5 @@ namespace BlobStorageService.Service
         {
             return container.GetBlockBlobReference(blobName);
         }
-
-
     }
 }

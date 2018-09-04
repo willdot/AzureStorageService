@@ -64,7 +64,7 @@ namespace BlobStorageService.Tests
 
             try
             {
-               await  blobStorageTools.DeleteContainerAsync(destinationContainerReference);
+                await blobStorageTools.DeleteContainerAsync(destinationContainerReference);
             }
             catch (Exception)
             {
@@ -80,7 +80,8 @@ namespace BlobStorageService.Tests
         [Test]
         public async Task Move_BlobNotFoundException()
         {
-            string exceptionMessage = "";
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified blob does not exist.";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             destinationContainerReference = Guid.NewGuid().ToString();
@@ -89,40 +90,42 @@ namespace BlobStorageService.Tests
 
             try
             {
-                await blobStorageTools.MoveAsync(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
+                await blobStorageTools.MoveAsync(sourceContainerReference, "fake", destinationContainerReference, "fake");
             }
             catch (Exception ex)
             {
-                exceptionMessage = ex.Message;
+                actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(exceptionMessage, "The specified blob does not exist.");
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
         }
 
         [Test]
         public async Task Move_ContainerNotFoundException()
         {
-            string exceptionMessage = "";
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container does not exist.";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             destinationContainerReference = Guid.NewGuid().ToString();
 
             try
             {
-                await blobStorageTools.MoveAsync(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
+                await blobStorageTools.MoveAsync(sourceContainerReference, "fake", destinationContainerReference, "fake");
             }
             catch (Exception ex)
             {
-                exceptionMessage = ex.Message;
+                actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(exceptionMessage, "The specified container does not exist.");
+            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
         }
 
         [Test]
         public async Task Copy_BlobNotFoundException()
         {
-            string exceptionMessage = "";
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified blob does not exist.";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             destinationContainerReference = Guid.NewGuid().ToString();
@@ -131,52 +134,190 @@ namespace BlobStorageService.Tests
 
             try
             {
-                await blobStorageTools.CopyAsync(sourceContainerReference, "fake2", sourceContainerReference, "fake2");
+                await blobStorageTools.CopyAsync(sourceContainerReference, "fake", sourceContainerReference, "fake");
             }
             catch (Exception ex)
             {
-                exceptionMessage = ex.Message;
+                actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(exceptionMessage, "The specified blob does not exist.");
+            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
         }
 
         [Test]
         public async Task Copy_ContainerNotFoundException()
         {
-            string exceptionMessage = "";
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container does not exist.";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             destinationContainerReference = Guid.NewGuid().ToString();
 
             try
             {
-                await blobStorageTools.CopyAsync(sourceContainerReference, "fake2", destinationContainerReference, "fake2");
+                await blobStorageTools.CopyAsync(sourceContainerReference, "fake", destinationContainerReference, "fake");
             }
             catch (Exception ex)
             {
-                exceptionMessage = ex.Message;
+                actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(exceptionMessage, "The specified container does not exist.");
+            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
         }
 
         [Test]
-        public async Task Delete_ContainerNotFoundException()
+        public async Task DeleteFile_ContainerNotFoundException()
         {
-            string exceptionMessage = "";
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container does not exist.";
+
             sourceContainerReference = Guid.NewGuid().ToString();
 
             try
             {
-                await blobStorageTools.DeleteAsync(sourceContainerReference, "fake3");
+                await blobStorageTools.DeleteAsync(sourceContainerReference, "fake");
             }
             catch (Exception ex)
             {
-                exceptionMessage = ex.Message;
+                actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(exceptionMessage, "The specified container does not exist.");
+            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
         }
+
+        [Test]
+        public async Task DeleteFile_BlobNotFoundExeption()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified blob does not exist.";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+
+            try
+            {
+                await blobStorageTools.DeleteAsync(sourceContainerReference, "fake");
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
+
+        [Test]
+        public async Task DownloadFile_BlobNotFoundExeption()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified blob does not exist.";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+
+            try
+            {
+                await blobStorageTools.DownloadAsync(sourceContainerReference, "fake", "fake");
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
+
+        [Test]
+        public async Task DownloadFile_ContainerNotFoundExeption()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container does not exist.";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            try
+            {
+                await blobStorageTools.DownloadAsync(sourceContainerReference, "fake", "fake");
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
+
+        // This test needs to upload a file, then download it but fail when looking for destination directory
+        [Test]
+        public async Task DownloadFile_DestinationDirectoryNotFoundExeption()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The path cannot be found";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+            await blobStorageTools.UploadAsync(sourceContainerReference, "../../../test.txt");
+            
+            try
+            {
+                await blobStorageTools.DownloadAsync(sourceContainerReference, "test.txt", "fakepath");
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
+
+        [Test]
+        public async Task UploadFile_ContainerNotFoundExeption()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container does not exist.";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            try
+            {
+                await blobStorageTools.UploadAsync(sourceContainerReference, "../../../test.txt");
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
+
+        [Test]
+        public async Task UploadFile_FileNotFoundExeption()
+        {
+            string actualExceptionMessage = "";
+
+            string directory = Environment.CurrentDirectory;
+            string expectedExceptionMessage = $"Could not find file '{directory}\\fake.txt'.";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+
+            try
+            {
+                await blobStorageTools.UploadAsync(sourceContainerReference, "fake.txt");
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
+
+        // Create container
+
+        // Delete container
     }
 }
