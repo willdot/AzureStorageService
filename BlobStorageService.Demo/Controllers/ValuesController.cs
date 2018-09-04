@@ -19,7 +19,7 @@ namespace BlobStorageService.Demo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<string>>> Get()
         {
 
             BlobStorageTools tools = new BlobStorageTools(azureProvider);
@@ -27,7 +27,7 @@ namespace BlobStorageService.Demo.Controllers
             string err = "";
             try
             {
-                tools.Move("blah", "blah",  "blah", "blah");
+                await tools.MoveAsync("blah", "blah",  "blah", "blah");
             }
             catch (Exception ex)
             {
@@ -37,7 +37,7 @@ namespace BlobStorageService.Demo.Controllers
 
             try
             {
-                tools.Upload("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"./test1.txt");
+                await tools.UploadAsync("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", @"./test1.txt");
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace BlobStorageService.Demo.Controllers
             
             try
             {
-                tools.Download("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", "test1.txt", "./copy-test1.txt");
+                await tools.DownloadAsync("sample-de542a93-8a61-4ba6-b2e5-ed3e76f0c56c", "test1.txt", "./copy-test1.txt");
             }
             catch (Exception ex)
             {

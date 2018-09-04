@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace BlobStorageService.Service
@@ -23,18 +24,18 @@ namespace BlobStorageService.Service
         /// <param name="containerReference">Container reference to download file from</param>
         /// <param name="remoteFilename">File name to download.null Case sensitive</param>
         /// <param name="localFileLocation">Full path including filename of where to download to</param>
-        public void Download(string containerReference, string remoteFilename, string localFileLocation)
+        public async Task DownloadAsync(string containerReference, string remoteFilename, string localFileLocation)
         {
             CloudBlobContainer container = GetContainer(containerReference);
 
             CloudBlockBlob blockBlob = GetBlockBlob(container, remoteFilename);
 
-            blockBlob.DownloadToFileAsync(localFileLocation, FileMode.Create).Wait();
+            await blockBlob.DownloadToFileAsync(localFileLocation, FileMode.Create);
 
             using (var fileStream = File.OpenWrite(localFileLocation))
             {
                 fileStream.Position = 0;
-                blockBlob.DownloadToStreamAsync(fileStream);
+                await blockBlob.DownloadToStreamAsync(fileStream);
             }
         }
 
@@ -43,7 +44,7 @@ namespace BlobStorageService.Service
         /// </summary>
         /// <param name="containerReference">Reference of container to upload file to</param>
         /// <param name="filename">Full path of file to upload</param>
-        public void Upload(string containerReference, string filename)
+        public async Task UploadAsync(string containerReference, string filename)
         {
             CloudBlobContainer container = GetContainer(containerReference);
 
@@ -51,7 +52,7 @@ namespace BlobStorageService.Service
 
             try
             {
-                blockBlob.UploadFromFileAsync(filename).Wait();
+                await blockBlob.UploadFromFileAsync(filename);
             }
             catch (Exception ex)
             {
@@ -59,17 +60,11 @@ namespace BlobStorageService.Service
             }
         }
 
-
-        /// <summary>
-        /// Delete a file
-        /// </summary>
-        /// <param name="containerReference">Reference of the container that the file is located in</param>
-        /// <param name="filename">Filename of file to delete</param>
-        public void Delete(string containerReference, string filename)
+        public async Task DeleteAsync(string containerReference, string filename)
         {
             try
             {
-                GetContainer(containerReference).DeleteAsync().Wait();
+                await GetContainer(containerReference).DeleteAsync();
             }
             catch (Exception ex)
             {
@@ -84,12 +79,12 @@ namespace BlobStorageService.Service
         /// <param name="sourceFilename">Filename of the source file</param>
         /// <param name="destinationContainerReference">Container reference of the destination</param>
         /// <param name="destinationFilename">Filename of the destination file</param>
-        public void Move(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
+        public async Task MoveAsync(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
             try
             {
-                Copy(sourceContainerReference, sourceFilename, destinationContainerReference, destinationFilename);
-                Delete(sourceContainerReference, sourceFilename);
+                await CopyAsync(sourceContainerReference, sourceFilename, destinationContainerReference, destinationFilename);
+                await DeleteAsync(sourceContainerReference, sourceFilename);
             }
             catch (Exception ex)
             {
@@ -104,20 +99,20 @@ namespace BlobStorageService.Service
         /// <param name="sourceFilename">Filename of the source file</param>
         /// <param name="destinationContainerReference">Container reference of the destination</param>
         /// <param name="destinationFilename">Filename of the destination file</param>
-        public void Copy(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
+        public async Task CopyAsync(string sourceContainerReference, string sourceFilename, string destinationContainerReference, string destinationFilename)
         {
             var sourceContainer = GetContainer(sourceContainerReference);
             var sourceBlob = GetBlockBlob(sourceContainer, sourceFilename);
 
             var destinationContainer = GetContainer(destinationContainerReference);
 
-            destinationContainer.CreateIfNotExistsAsync().Wait();
+            await destinationContainer.CreateIfNotExistsAsync();
 
             var destinationBlob = destinationContainer.GetBlockBlobReference(destinationFilename);
 
             try
             {
-                destinationBlob.StartCopyAsync(sourceBlob).Wait();
+                await destinationBlob.StartCopyAsync(sourceBlob);
 
                 if (destinationBlob.CopyState.Status != CopyStatus.Success)
                 {
@@ -130,17 +125,17 @@ namespace BlobStorageService.Service
             }
         }
 
-        public void CreateContainer(string containerReference)
+        public async Task CreateContainerAsync(string containerReference)
         {
             var destinationContainer = GetContainer(containerReference);
 
-            destinationContainer.CreateIfNotExistsAsync().Wait();
+            await destinationContainer.CreateIfNotExistsAsync();
         }
 
-        public void DeleteContainer(string containerReference)
+        public async Task DeleteContainerAsync(string containerReference)
         {
             var sourceContainer = GetContainer(containerReference);
-            sourceContainer.DeleteAsync().Wait();
+            await sourceContainer.DeleteAsync();
         }
 
 

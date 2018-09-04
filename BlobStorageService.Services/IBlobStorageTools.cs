@@ -1,22 +1,23 @@
 using System;
+using System.Threading.Tasks;
 
 namespace BlobStorageService.Service
 {
     public interface IBlobStorageTools
     {
-        void Upload(string containerReference, string filename);
+        Task UploadAsync(string containerReference, string filename);
 
-        void Download(string containerReference, string remoteFilename, string localFileLocation);
+        Task DownloadAsync(string containerReference, string remoteFilename, string localFileLocation);
 
-        void Delete(string containerReference, string filename);
+        Task DeleteAsync(string containerReference, string filename);
 
-        void Move (string sourceContainerReference, string sourceFilename,  string destinationContainerReference, string destinationFilename);
+        Task MoveAsync(string sourceContainerReference, string sourceFilename,  string destinationContainerReference, string destinationFilename);
 
-        void Copy (string sourceContainerReference, string sourceFilename,  string destinationContainerReference, string destinationFilename);
+        Task CopyAsync(string sourceContainerReference, string sourceFilename,  string destinationContainerReference, string destinationFilename);
 
-        void DeleteContainer(string containerReference);
+        Task DeleteContainerAsync(string containerReference);
 
-        void CreateContainer(string containerReference);
+        Task CreateContainerAsync(string containerReference);
 
     }
 }

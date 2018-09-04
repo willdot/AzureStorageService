@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using BlobStorageService.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -50,11 +51,11 @@ namespace BlobStorageService.Tests
         }
 
         [TearDown]
-        public void TearDown()
+        public async Task TearDown()
         {
             try
             {
-                blobStorageTools.DeleteContainer(sourceContainerReference);
+                await blobStorageTools.DeleteContainerAsync(sourceContainerReference);
             }
             catch (Exception)
             {
@@ -63,7 +64,7 @@ namespace BlobStorageService.Tests
 
             try
             {
-                blobStorageTools.DeleteContainer(destinationContainerReference);
+               await  blobStorageTools.DeleteContainerAsync(destinationContainerReference);
             }
             catch (Exception)
             {
@@ -77,18 +78,18 @@ namespace BlobStorageService.Tests
 
 
         [Test]
-        public void Move_BlobNotFoundException()
+        public async Task Move_BlobNotFoundException()
         {
             string exceptionMessage = "";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             destinationContainerReference = Guid.NewGuid().ToString();
-            blobStorageTools.CreateContainer(sourceContainerReference);
-            blobStorageTools.CreateContainer(destinationContainerReference);
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+            await blobStorageTools.CreateContainerAsync(destinationContainerReference);
 
             try
             {
-                blobStorageTools.Move(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
+                await blobStorageTools.MoveAsync(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
             }
             catch (Exception ex)
             {
@@ -99,7 +100,7 @@ namespace BlobStorageService.Tests
         }
 
         [Test]
-        public void Move_ContainerNotFoundException()
+        public async Task Move_ContainerNotFoundException()
         {
             string exceptionMessage = "";
 
@@ -108,7 +109,7 @@ namespace BlobStorageService.Tests
 
             try
             {
-                blobStorageTools.Move(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
+                await blobStorageTools.MoveAsync(sourceContainerReference, "fake1", destinationContainerReference, "fake1");
             }
             catch (Exception ex)
             {
@@ -119,18 +120,18 @@ namespace BlobStorageService.Tests
         }
 
         [Test]
-        public void Copy_BlobNotFoundException()
+        public async Task Copy_BlobNotFoundException()
         {
             string exceptionMessage = "";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             destinationContainerReference = Guid.NewGuid().ToString();
-            blobStorageTools.CreateContainer(sourceContainerReference);
-            blobStorageTools.CreateContainer(destinationContainerReference);
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+            await blobStorageTools.CreateContainerAsync(destinationContainerReference);
 
             try
             {
-                blobStorageTools.Copy(sourceContainerReference, "fake2", sourceContainerReference, "fake2");
+                await blobStorageTools.CopyAsync(sourceContainerReference, "fake2", sourceContainerReference, "fake2");
             }
             catch (Exception ex)
             {
@@ -141,7 +142,7 @@ namespace BlobStorageService.Tests
         }
 
         [Test]
-        public void Copy_ContainerNotFoundException()
+        public async Task Copy_ContainerNotFoundException()
         {
             string exceptionMessage = "";
 
@@ -150,7 +151,7 @@ namespace BlobStorageService.Tests
 
             try
             {
-                blobStorageTools.Copy(sourceContainerReference, "fake2", destinationContainerReference, "fake2");
+                await blobStorageTools.CopyAsync(sourceContainerReference, "fake2", destinationContainerReference, "fake2");
             }
             catch (Exception ex)
             {
@@ -161,14 +162,14 @@ namespace BlobStorageService.Tests
         }
 
         [Test]
-        public void Delete_ContainerNotFoundException()
+        public async Task Delete_ContainerNotFoundException()
         {
             string exceptionMessage = "";
             sourceContainerReference = Guid.NewGuid().ToString();
 
             try
             {
-                blobStorageTools.Delete(sourceContainerReference, "fake3");
+                await blobStorageTools.DeleteAsync(sourceContainerReference, "fake3");
             }
             catch (Exception ex)
             {
