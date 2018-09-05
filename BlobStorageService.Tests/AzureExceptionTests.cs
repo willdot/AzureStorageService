@@ -343,7 +343,7 @@ namespace BlobStorageService.Tests
             Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
 
         }
-
+        
         [Test]
         public async Task DeleteContainer_NotExist()
         {
