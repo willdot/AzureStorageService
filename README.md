@@ -79,3 +79,9 @@ public class Test
 ```
 
 A demo can be found in the BlobStorageService.Demo project.
+
+### Running the tests
+
+Make a copy of the appsettings.json and rename it appsettings.test.json. Then add in your Azure storage connection string.
+
+Run the tests in a test explorer of your choice.
