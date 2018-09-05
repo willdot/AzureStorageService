@@ -145,7 +145,7 @@ namespace BlobStorageService.Service
         {
             var destinationContainer = GetContainer(containerReference);
 
-            await destinationContainer.CreateIfNotExistsAsync();
+            await destinationContainer.CreateAsync();
         }
 
         /// <summary>

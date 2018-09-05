@@ -32,7 +32,7 @@ namespace BlobStorageService.Tests
         public void OneTimeSetup()
         {
             config = new ConfigurationBuilder()
-            .AddJsonFile(Path.Combine(Environment.CurrentDirectory,  "appsettings.test.json"))
+            .AddJsonFile(Path.Combine(Environment.CurrentDirectory, "appsettings.test.json"))
             .Build();
 
             testFile = Path.Combine(Environment.CurrentDirectory, "test.txt");
@@ -123,7 +123,7 @@ namespace BlobStorageService.Tests
                 actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace BlobStorageService.Tests
                 actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace BlobStorageService.Tests
                 actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace BlobStorageService.Tests
                 actualExceptionMessage = ex.Message;
             }
 
-            Assert.AreEqual(expectedExceptionMessage ,actualExceptionMessage);
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
         }
 
         [Test]
@@ -265,7 +265,7 @@ namespace BlobStorageService.Tests
 
             await blobStorageTools.CreateContainerAsync(sourceContainerReference);
             await blobStorageTools.UploadAsync(sourceContainerReference, testFile);
-            
+
             try
             {
                 await blobStorageTools.DownloadAsync(sourceContainerReference, "test.txt", "fakepath");
@@ -321,8 +321,47 @@ namespace BlobStorageService.Tests
             Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
         }
 
-        // Create container
+        [Test]
+        public async Task CreateContainer_AlreadyExists()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container already exists.";
 
-        // Delete container
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+
+            try
+            {
+                await blobStorageTools.CreateContainerAsync(sourceContainerReference);
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+
+        }
+
+        [Test]
+        public async Task DeleteContainer_NotExist()
+        {
+            string actualExceptionMessage = "";
+            string expectedExceptionMessage = "The specified container does not exist.";
+
+            sourceContainerReference = Guid.NewGuid().ToString();
+
+            try
+            {
+                await blobStorageTools.DeleteContainerAsync(sourceContainerReference);
+            }
+            catch (Exception ex)
+            {
+                actualExceptionMessage = ex.Message;
+            }
+
+            Assert.AreEqual(expectedExceptionMessage, actualExceptionMessage);
+        }
     }
 }
