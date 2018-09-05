@@ -304,7 +304,7 @@ namespace BlobStorageService.Tests
             string actualExceptionMessage = "";
 
             string directory = Environment.CurrentDirectory;
-            string expectedExceptionMessage = $"Could not find file '{directory}\\fake.txt'.";
+            string expectedExceptionMessage = $"Could not find file '{testFile.Replace("test", "fake")}'.";
 
             sourceContainerReference = Guid.NewGuid().ToString();
             await blobStorageTools.CreateContainerAsync(sourceContainerReference);
